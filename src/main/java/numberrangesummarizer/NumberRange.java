@@ -10,6 +10,8 @@ public class NumberRange {
 
   public static Collection<Integer> convertStringOfNumbersToCollectionOfNumbers(String input){
 
+    if(input == null) return Collections.emptyList();
+
     if(input.equals("")) return Collections.emptyList();
 
     //Ideally would have thrown an exception or error Message for an Invalid Input
@@ -20,20 +22,22 @@ public class NumberRange {
 
   public static String convertCollectionOfNumbersToSummarizedCollection(Collection<Integer> input) {
 
-    if(input.size() == 0) return "";
+    if(input == null) return "";
+
+    if(input.isEmpty()) return "";
 
     List<Integer> inputAsList = new ArrayList<>(input);
 
     List<String> listOfSequentialNumbers = new ArrayList<>();
 
-    int previousNumber = input.iterator().next();
+    int currentNumber = input.iterator().next();
 
     int fromIndex = 0;
     int toIndex = 0;
 
     for (Integer number : input) {
 
-      if (toIndex != 0 && isNonSequential(previousNumber, number)) {
+      if (toIndex != 0 && isNonSequential(currentNumber, number)) {
         listOfSequentialNumbers.add(groupIntoRange(inputAsList.subList(fromIndex, toIndex)));
         fromIndex = toIndex;
       }
@@ -42,21 +46,21 @@ public class NumberRange {
         listOfSequentialNumbers.add(groupIntoRange(inputAsList.subList(fromIndex, toIndex += 1)));
       }
 
-      previousNumber = number;
+      currentNumber = number;
       toIndex++;
     }
 
     return String.join(", ", listOfSequentialNumbers);
   }
 
-  public static String groupIntoRange(List<Integer> input) {
+  private static String groupIntoRange(List<Integer> input) {
 
     if(input.size() == 1) return input.get(0).toString();
 
     return input.get(0) + "-" + input.get(input.size() - 1);
   }
 
-  private static boolean isNonSequential(int previousNumber, Integer number) {
-    return number <= previousNumber && number != previousNumber - 1 || number >= previousNumber && number != previousNumber + 1;
+  private static boolean isNonSequential(int currentNumber, Integer followingNumber) {
+    return followingNumber <= currentNumber && followingNumber != currentNumber - 1 || followingNumber >= currentNumber && followingNumber != currentNumber + 1;
   }
 }
